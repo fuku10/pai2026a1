@@ -2,4 +2,5 @@
 Physical AI 2026 Advanced 1
 
 SO-101 + Lerobot 0.6.1 + ACT
+
 WSL2 + Ubuntu 22.04
