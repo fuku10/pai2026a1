@@ -1,9 +1,9 @@
-# pai2026a1
-Physical AI 2026 Advanced 1
+# 概要
+SO-101でピッキングを行うためのデータ収集、学習、推論のコードです。
 
-SO-101 + Lerobot 0.6.1 + ACT
-
-WSL2 + Ubuntu 22.04
+| OS | フレームワーク | モデル |
+| --- | --- |  --- |
+| WSL2 + Ubuntu 24.04 | LeRobot 0.6.1 | ACT |
 
 # スクリプト一覧
 
