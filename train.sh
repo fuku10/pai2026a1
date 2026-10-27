@@ -1,0 +1,12 @@
+lerobot-train \
+  --dataset.repo_id=fkmt/so101_picking_20261027_143500 \
+  --policy.type=act \
+  --policy.push_to_hub=true \
+  --output_dir=outputs/train/act_so101_picking \
+  --job_name=act_so101_picking \
+  --policy.device=cuda \
+  --wandb.enable=false \
+  --policy.repo_id=fkmt/act_so-101_picking \
+  --batch_size=12 \
+  --steps=100000 \
+  --save_freq=10000
