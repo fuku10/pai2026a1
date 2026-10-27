@@ -68,7 +68,7 @@ lerobot-record \
 ```
 
 ### 3. train.sh
-ACTで1万ステップの学習をします。
+ACTで10万ステップの学習をします。
 バッチサイズは12です。
 RTX3070(VRAM8GB)では、Windowsのタスクマネージャー上で専用GPUメモリの消費量は約6GBでした。
 
