@@ -1,29 +1,42 @@
 # 概要
 SO-101でピッキングを行うためのデータ収集、学習、推論のコードです。
+学習を含め、ローカルで行いました。
 
-| ロボット | OS | フレームワーク | モデル |
-| --- | --- |  --- |  --- |
-| SO-101 | WSL2 + Ubuntu 24.04 | LeRobot 0.6.1 | ACT |
+| ロボット | 俯瞰カメラ | 手首カメラ | OS | GPU | フレームワーク | モデル |
+| --- | --- |  --- |  --- |  --- |  --- |  --- |
+| SO-101 | ロジクールC920s | InnoMaker 1080P USB2.0 UVCカメラ | WSL2 + Ubuntu 24.04 | RTX 3070 | LeRobot 0.6.1 | ACT |
 
 # スクリプト一覧
 
-プロジェクトで使用する3つのシェルスクリプトの概要です。
+プロジェクトで使用する3つのシェルスクリプトの概要です。基本的にはLeRobotのチュートリアルのImitation Learning for Robotsをベースにしています。
+
+https://huggingface.co/docs/lerobot/main/en/il_robots
 
 | ファイル名 | 役割 | 実行方法 |
 | :--- | :--- | :--- |
 | `record.sh` | データ収集（10エピソード） | `./record.sh` |
-| `record_resume.sh` | データの追加収集（10エピソード） | `./record_resume.sh` |
-| `train.sh` | 学習 | `./train.sh 2>&1 \| tee outputs/train/last_run.log` |
+| `record_resume.sh` | データの追加収集（追加10エピソード） | `./record_resume.sh` |
+| `train.sh` | 学習 | `./train.sh` |
+| `rollout.sh` | 推論 | `./rollout.sh` |
 
 ---
 
-## 各スクリプトの詳細
-wsl上のubuntu24.04で動作させました。
+# 準備
+基本的にLeRobotのGetting StartedのInstallationの通りに設定を行いました。（なお、mini-forgeを使い、LeRobotはpipでインストールしました。）
 
-### 1. record.sh
-SO-101でデータ収集をします。
-カメラは俯瞰カメラと手首カメラを使います。WSL越しなので帯域制限が厳しく、俯瞰カメラは320x240,30fps,MJPGとし、手首カメラは640x480,30fps,MJPGとしました。
-10エピソードだけ収集します。
+https://huggingface.co/docs/lerobot/main/en/installation
+
+ただ、WSLを使っているため、カメラをWSL上のubuntuで認識するために以下の作業を実施しました。
+
+https://learn.microsoft.com/ja-jp/windows/wsl/connect-usb
+
+
+# 各スクリプトの詳細
+
+## 1. record.sh
+SO-101で10エピソード分のデータ収集をするスクリプトです。
+カメラは俯瞰カメラと手首カメラを使います。WSL越しなので帯域制限が厳しく、俯瞰カメラは320x240,30fps,MJPGとし、手首カメラは640x480,30fps,MJPGとしました。（解像度が違うせいで、後で同じデータセットを使ってモデルをDiffusion Policyに変えて学習しようとすると、エラーが出ました。）
+一度で大量のデータ収集をするのは大変なので、10エピソードで区切りました。
 
 ```sh
 lerobot-record \
@@ -43,9 +56,9 @@ lerobot-record \
     --dataset.encoder_threads=2
 ```
 
-### 2. record_resume.sh
+## 2. record_resume.sh
 追加で10エピソードのデータを収集します。
-一度で大量のデータ収集をするのは大変なので、10エピソードで区切りました。
+最終的に50エピソード分のデータを収集しました。
 
 ```sh
 lerobot-record \
@@ -67,9 +80,9 @@ lerobot-record \
     --resume=true 
 ```
 
-### 3. train.sh
+## 3. train.sh
 ACTで10万ステップの学習をします。
-バッチサイズは12です。
+バッチサイズは12としました。
 RTX3070(VRAM8GB)では、Windowsのタスクマネージャー上で専用GPUメモリの消費量は約6GBでした。
 
 ```sh
@@ -85,4 +98,19 @@ lerobot-train \
   --batch_size=12 \
   --steps=100000 \
   --save_freq=10000
+```
+
+## 4. rollout.sh
+推論します。ローカルのRTX3070で動かしました。（なお、上記LeRobotのチュートリアルImitation Learning for Robotsのコードだとrobot.idの設定が抜けていているのでキャリブレーションのやり直しを要求されます。）
+
+```sh
+lerobot-rollout \
+  --strategy.type=base \
+  --policy.path=fkmt/act_so101_picking \
+  --robot.type=so101_follower \
+  --robot.port=/dev/ttyACM0 \
+  --robot.id=my_awesome_follower_arm \
+  --robot.cameras="{ top: {type: opencv, index_or_path: /dev/video2, width: 320, height: 240, fps: 30, fourcc: 'MJPG'}, wrist: {type: opencv, index_or_path: /dev/video0, width: 640, height: 480, fps: 30, fourcc: 'MJPG'}}" \
+  --task="Pick a pooley" \
+  --duration=60
 ```
