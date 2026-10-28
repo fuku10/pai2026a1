@@ -6,7 +6,7 @@ lerobot-train \
   --job_name=act_so101_picking \
   --policy.device=cuda \
   --wandb.enable=false \
-  --policy.repo_id=fkmt/act_so-101_picking \
+  --policy.repo_id=fkmt/act_so101_picking \
   --batch_size=12 \
   --steps=100000 \
   --save_freq=10000
