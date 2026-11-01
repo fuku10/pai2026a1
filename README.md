@@ -57,7 +57,7 @@ lerobot-record \
 
 ## 2. record_resume.sh
 追加で10エピソードのデータを収集します。
-最終的に50エピソード分のデータを収集しました。
+5回実行して、最終的に50エピソード分のデータを収集しました。
 
 ```sh
 lerobot-record \
@@ -82,7 +82,7 @@ lerobot-record \
 ## 3. train.sh
 ACTで10万ステップの学習をします。
 バッチサイズは12としました。
-RTX3070(VRAM8GB)では、Windowsのタスクマネージャー上で専用GPUメモリの消費量は約6GBでした。
+RTX3070(VRAM8GB)では、Windowsのタスクマネージャー上で専用GPUメモリの消費量は約6GBで、学習時間は5時間2分58秒でした。
 
 ```sh
 lerobot-train \
