@@ -30,6 +30,7 @@ https://huggingface.co/docs/lerobot/main/en/installation
 
 https://learn.microsoft.com/ja-jp/windows/wsl/connect-usb
 
+キャリブレーション時につけるロボットIDは"my_awesome_follower_arm"と"my_awesome_leader_arm"としました．
 
 # 各スクリプトの詳細
 
