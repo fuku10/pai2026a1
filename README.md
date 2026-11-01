@@ -22,12 +22,10 @@ https://huggingface.co/docs/lerobot/main/en/il_robots
 ---
 
 # 準備
-基本的にLeRobotのGetting StartedのInstallationの通りに設定を行いました。（なお、mini-forgeを使い、LeRobotはpipでインストールしました。）
-
+基本的にLeRobotのGetting StartedのInstallationの通りに設定を行いました。（なお、mini-forgeを使い、LeRobotはpipでインストールしました。）\
 https://huggingface.co/docs/lerobot/main/en/installation
 
-ただ、WSLを使っているため、カメラをWSL上のubuntuで認識するために以下の作業を実施しました。
-
+ただ、WSLを使っているため、カメラをWSL上のubuntuで認識するために以下の作業を実施しました。\
 https://learn.microsoft.com/ja-jp/windows/wsl/connect-usb
 
 キャリブレーション時につけるロボットIDは"my_awesome_follower_arm"と"my_awesome_leader_arm"としました．
